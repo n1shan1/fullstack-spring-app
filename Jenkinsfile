@@ -30,7 +30,7 @@ pipeline {
                 dir('spring-boot-server') {
                     sh '''
                         echo "${DOCKERHUB_CREDENTIALS_PSW}" | docker login -u "${DOCKERHUB_CREDENTIALS_USR}" --password-stdin
-                        docker buildx create --use --name multiarch-builder --driver docker-container || docker buildx use multiarch-builder
+                        docker buildx create --use --name multiarch-builder --driver docker-container --driver-opt network=host || docker buildx use multiarch-builder
                         docker buildx build --platform linux/amd64,linux/arm64 -t ${DOCKERHUB_CREDENTIALS_USR}/backend:latest --push .
                     '''
                 }
@@ -49,7 +49,7 @@ pipeline {
                 dir('angular-17-client') {
                     sh '''
                         echo "${DOCKERHUB_CREDENTIALS_PSW}" | docker login -u "${DOCKERHUB_CREDENTIALS_USR}" --password-stdin
-                        docker buildx create --use --name multiarch-builder --driver docker-container || docker buildx use multiarch-builder
+                        docker buildx use multiarch-builder
                         docker buildx build --platform linux/amd64,linux/arm64 -t ${DOCKERHUB_CREDENTIALS_USR}/frontend:latest --push .
                     '''
                 }
