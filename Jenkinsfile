@@ -82,12 +82,12 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} << EOF
                             cd ${APP_DIR}
                             echo "🧹 Cleaning old containers..."
-                            docker compose down
+                            sudo docker compose down
                             echo "Pulling latest images..."
-                            docker pull ${DOCKERHUB_CREDENTIALS_USR}/backend:latest
-                            docker pull ${DOCKERHUB_CREDENTIALS_USR}/frontend:latest
+                            sudo docker pull ${DOCKERHUB_CREDENTIALS_USR}/backend:latest
+                            sudo docker pull ${DOCKERHUB_CREDENTIALS_USR}/frontend:latest
                             echo "Starting updated containers..."
-                            docker compose up -d
+                            sudo docker compose up -d
                             exit
 EOF
                     '''
