@@ -1,18 +1,21 @@
+version: '3.8'
+
 services:
   backend:
-    build: ./spring-boot-server
-    container_name: spring-backend
+    image: niishantdev/backend:latest
+    container_name: backend
     ports:
       - "8080:8080"
+    restart: always
     networks:
       - app-network
+
   frontend:
-    build: ./angular-17-client
-    container_name: angular-frontend
+    image: niishantdev/frontend:latest
+    container_name: frontend
     ports:
       - "4200:80"
-    depends_on:
-      - backend
+    restart: always
     networks:
       - app-network
 
