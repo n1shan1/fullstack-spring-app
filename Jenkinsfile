@@ -3,11 +3,10 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-        EC2_SSH_KEY = credentials('ec2-ssh-key')
-        EC2_HOST = "ec2-xx-xxx-xxx-xx.compute.amazonaws.com"
+        EC2_HOST = "ec2-3-80-177-47.compute-1.amazonaws.com"
         EC2_USER = "ubuntu"
         APP_DIR = "/home/ubuntu/app"
-        KEY_CREDENTIAL_ID = "jenkins-ec2-key"
+        KEY_CREDENTIAL_ID = "ec2-ssh-key"
     }
 
     stages {
@@ -58,17 +57,15 @@ pipeline {
                     sh '''
                         scp -o StrictHostKeyChecking=no docker-compose.yml ${EC2_USER}@${EC2_HOST}:${APP_DIR}/
                     '''
-                    
+
                     sh '''
                         ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} << EOF
                             cd ${APP_DIR}
                             echo "🧹 Cleaning old containers..."
                             docker compose down
-
                             echo "Pulling latest images..."
                             docker pull ${DOCKERHUB_CREDENTIALS_USR}/backend:latest
                             docker pull ${DOCKERHUB_CREDENTIALS_USR}/frontend:latest
-
                             echo "Starting updated containers..."
                             docker compose up -d
                             exit
