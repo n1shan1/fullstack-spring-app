@@ -14,7 +14,7 @@ pipeline {
             steps {
                 echo "Cloning repository from GitHub..."
                 checkout scm
-                stash includes: 'docker-compose.yml', name: 'docker-compose'
+                stash includes: 'docker-compose.yaml', name: 'docker-compose'
             }
         }
 
@@ -75,7 +75,7 @@ pipeline {
                 unstash 'docker-compose'
                 sshagent([env.KEY_CREDENTIAL_ID]) {
                     sh '''
-                        scp -o StrictHostKeyChecking=no docker-compose.yml ${EC2_USER}@${EC2_HOST}:${APP_DIR}/
+                        scp -o StrictHostKeyChecking=no docker-compose.yaml ${EC2_USER}@${EC2_HOST}:${APP_DIR}/
                     '''
 
                     sh '''
