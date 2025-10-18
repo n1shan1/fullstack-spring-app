@@ -18,6 +18,12 @@ pipeline {
         }
 
         stage('Build Backend Docker Image') {
+            agent {
+                docker {
+                    image 'docker:latest'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 echo "Building backend Docker image..."
                 dir('spring-boot-server') {
@@ -29,6 +35,12 @@ pipeline {
         }
 
         stage('Build Frontend Docker Image') {
+            agent {
+                docker {
+                    image 'docker:latest'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 echo "Building frontend Docker image..."
                 dir('angular-17-client') {
@@ -40,6 +52,12 @@ pipeline {
         }
 
         stage('Push Images to DockerHub') {
+            agent {
+                docker {
+                    image 'docker:latest'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
             steps {
                 echo "Logging in and pushing images to DockerHub..."
                 sh '''
