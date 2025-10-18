@@ -1,0 +1,39 @@
+<div class="app-card">
+  <div class="submit-form">
+    @if (!submitted) {
+    <h5 class="mb-3">Add Tutorial</h5>
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        required
+        [(ngModel)]="tutorial.title"
+        name="title"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea
+        class="form-control"
+        id="description"
+        required
+        rows="3"
+        [(ngModel)]="tutorial.description"
+        name="description"
+      ></textarea>
+    </div>
+
+    <div class="text-end">
+      <button (click)="saveTutorial()" class="btn btn-primary">Submit</button>
+    </div>
+    } @else {
+    <div class="text-center">
+      <h5 class="mb-3">Tutorial was submitted successfully!</h5>
+      <button class="btn btn-outline-primary" (click)="newTutorial()">Add another</button>
+    </div>
+    }
+  </div>
+</div>

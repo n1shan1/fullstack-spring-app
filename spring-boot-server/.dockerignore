@@ -1,0 +1,24 @@
+# Maven build artifacts
+target
+
+# Dependency caches
+.mvn
+**/mvnw
+**/mvnw.cmd
+
+# IDE and system files
+.vscode
+.idea
+*.iml
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+*.tmp
+*.bak
+
+# Git and environment files
+.git
+.gitignore
+.env

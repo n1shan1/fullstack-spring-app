@@ -1,0 +1,22 @@
+services:
+  backend:
+    build: ./spring-boot-server
+    container_name: spring-backend
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+  frontend:
+    build: ./angular-17-client
+    container_name: angular-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+

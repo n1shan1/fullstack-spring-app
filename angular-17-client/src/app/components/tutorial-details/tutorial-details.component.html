@@ -1,0 +1,63 @@
+@if (viewMode){
+  @if (currentTutorial.id){
+  <div>
+    <h5 class="mb-2">{{ currentTutorial.title }}</h5>
+    <p class="muted mb-2">{{ currentTutorial.description }}</p>
+    <div class="mb-3">
+      <span class="badge bg-primary me-2">{{ currentTutorial.published ? 'Published' : 'Pending' }}</span>
+      <small class="muted">ID: {{ currentTutorial.id }}</small>
+    </div>
+
+    <div class="card-actions">
+      <a class="btn btn-sm btn-outline-secondary" routerLink="/tutorials/{{ currentTutorial.id }}">Edit</a>
+    </div>
+  </div>
+  } @else {<p class="muted">Please click on a Tutorial...</p>}
+} @else {
+  @if (currentTutorial.id) {
+  <div>
+    <h5 class="mb-3">Edit Tutorial</h5>
+    <form>
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          [(ngModel)]="currentTutorial.title"
+          name="title"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          class="form-control"
+          id="description"
+          rows="3"
+          [(ngModel)]="currentTutorial.description"
+          name="description"
+        ></textarea>
+      </div>
+
+      <div class="mb-3">
+        <strong>Status:</strong>
+        <span class="ms-2">{{ currentTutorial.published ? "Published" : "Pending" }}</span>
+      </div>
+    </form>
+
+    <div class="card-actions">
+      @if (currentTutorial.published) {
+      <button class="btn btn-sm btn-outline-primary" (click)="updatePublished(false)">UnPublish</button>
+      } @else {
+      <button class="btn btn-sm btn-outline-primary" (click)="updatePublished(true)">Publish</button>
+      }
+
+      <button class="btn btn-sm btn-outline-danger" (click)="deleteTutorial()">Delete</button>
+
+      <button type="submit" class="btn btn-sm btn-primary" (click)="updateTutorial()">Update</button>
+    </div>
+
+    <p class="mt-2">{{ message }}</p>
+  </div>
+  } @else {<p class="muted">Cannot access this Tutorial...</p>}
+}

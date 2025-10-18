@@ -1,0 +1,8 @@
+.submit-form {
+  max-width: 400px;
+  margin: auto;
+}
+
+.submit-form .form-label {
+  font-weight: 600;
+}

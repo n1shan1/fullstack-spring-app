@@ -1,0 +1,26 @@
+stages:
+  - build
+
+build-angular:
+  stage: build
+  image: node:18-alpine
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules/
+  before_script:
+    - npm ci --cache .npm --prefer-offline
+  script:
+    - echo "Building Angular application..."
+    - npm run build -- --configuration production
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 week
+  only:
+    - master
+    - main
+    - develop
+    - merge_requests

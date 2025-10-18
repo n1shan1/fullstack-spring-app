@@ -1,0 +1,68 @@
+/* Import Bootstrap from node_modules (requires `npm install` already in project dependencies) */
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+@import "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css";
+
+/* Global theme variables */
+:root {
+  --bs-primary: #2563eb; /* nicer blue */
+  --bs-secondary: #6b7280;
+  --app-bg: #f4f7fb;
+  --card-bg: #ffffff;
+  --muted: #6b7280;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial;
+  background: var(--app-bg);
+  color: #111827;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* App container */
+.container.mt-3 {
+  max-width: 1100px;
+}
+
+/* Card styles used across components */
+.app-card {
+  background: var(--card-bg);
+  border-radius: 0.6rem;
+  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.list {
+  text-align: left;
+  max-width: 750px;
+  margin: auto;
+}
+
+/* Buttons */
+.btn-primary,
+.bg-primary {
+  background-color: var(--bs-primary) !important;
+  border-color: transparent;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+/* Small helpers */
+.muted {
+  color: var(--muted);
+}
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
