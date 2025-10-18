@@ -49,7 +49,7 @@ pipeline {
                 dir('angular-17-client') {
                     sh '''
                         echo "${DOCKERHUB_CREDENTIALS_PSW}" | docker login -u "${DOCKERHUB_CREDENTIALS_USR}" --password-stdin
-                        docker buildx use multiarch-builder
+                        docker buildx create --use --name multiarch-builder-frontend --driver docker-container --driver-opt network=host || docker buildx use multiarch-builder-frontend
                         docker buildx build --platform linux/amd64,linux/arm64 -t ${DOCKERHUB_CREDENTIALS_USR}/frontend:latest --push .
                     '''
                 }
