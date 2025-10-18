@@ -14,6 +14,7 @@ pipeline {
             steps {
                 echo "Cloning repository from GitHub..."
                 checkout scm
+                stash includes: 'docker-compose.yml', name: 'docker-compose'
             }
         }
 
@@ -71,6 +72,7 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 echo "Deploying to EC2 instance..."
+                unstash 'docker-compose'
                 sshagent([env.KEY_CREDENTIAL_ID]) {
                     sh '''
                         scp -o StrictHostKeyChecking=no docker-compose.yml ${EC2_USER}@${EC2_HOST}:${APP_DIR}/
@@ -87,7 +89,7 @@ pipeline {
                             echo "Starting updated containers..."
                             docker compose up -d
                             exit
-                            EOF
+EOF
                     '''
                 }
             }
