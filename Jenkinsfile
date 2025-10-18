@@ -29,7 +29,9 @@ pipeline {
                 echo "Building backend Docker image..."
                 dir('spring-boot-server') {
                     sh '''
-                        docker build -t ${DOCKERHUB_CREDENTIALS_USR}/backend:latest .
+                        echo "${DOCKERHUB_CREDENTIALS_PSW}" | docker login -u "${DOCKERHUB_CREDENTIALS_USR}" --password-stdin
+                        docker buildx create --use --name multiarch-builder --driver docker-container || docker buildx use multiarch-builder
+                        docker buildx build --platform linux/amd64,linux/arm64 -t ${DOCKERHUB_CREDENTIALS_USR}/backend:latest --push .
                     '''
                 }
             }
@@ -46,26 +48,11 @@ pipeline {
                 echo "Building frontend Docker image..."
                 dir('angular-17-client') {
                     sh '''
-                        docker build -t ${DOCKERHUB_CREDENTIALS_USR}/frontend:latest .
+                        echo "${DOCKERHUB_CREDENTIALS_PSW}" | docker login -u "${DOCKERHUB_CREDENTIALS_USR}" --password-stdin
+                        docker buildx create --use --name multiarch-builder --driver docker-container || docker buildx use multiarch-builder
+                        docker buildx build --platform linux/amd64,linux/arm64 -t ${DOCKERHUB_CREDENTIALS_USR}/frontend:latest --push .
                     '''
                 }
-            }
-        }
-
-        stage('Push Images to DockerHub') {
-            agent {
-                docker {
-                    image 'docker:latest'
-                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
-            steps {
-                echo "Logging in and pushing images to DockerHub..."
-                sh '''
-                    echo "${DOCKERHUB_CREDENTIALS_PSW}" | docker login -u "${DOCKERHUB_CREDENTIALS_USR}" --password-stdin
-                    docker push ${DOCKERHUB_CREDENTIALS_USR}/backend:latest
-                    docker push ${DOCKERHUB_CREDENTIALS_USR}/frontend:latest
-                '''
             }
         }
 
