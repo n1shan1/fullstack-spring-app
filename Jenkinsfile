@@ -2,50 +2,49 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
-        EC2_KEY = credentials('jenkins-ec2-key')
+        DOCKER_HUB_USER = 'niishantdev'
+        DOCKER_HUB_PASS = credentials('dockerhub')
+        ANSIBLE_DIR = '/home/ubuntu/ansible'
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                echo "Cloning repository from GitHub..."
                 checkout scm
             }
         }
 
-        stage('Build Backend Docker Image') {
+        stage('Build Docker Images') {
             steps {
-                dir('spring-boot-server') {
-                    sh 'docker build -t niishantdev/backend:latest .'
-                }
-            }
-        }
-
-        stage('Build Frontend Docker Image') {
-            steps {
-                dir('angular-17-client') {
-                    sh 'docker build -t niishantdev/frontend:latest .'
-                }
-            }
-        }
-
-        stage('Push Images to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                script {
                     sh '''
-                    echo $PASS | docker login -u $USER --password-stdin
-                    docker push niishantdev/backend:latest
-                    docker push niishantdev/frontend:latest
+                    echo "Building Docker images..."
+                    docker build -t $DOCKER_HUB_USER/backend:latest ./spring-boot-server
+                    docker build -t $DOCKER_HUB_USER/frontend:latest ./angular-17-client
                     '''
                 }
             }
         }
 
-        stage('Deploy via Ansible') {
+        stage('Push to Docker Hub') {
             steps {
-                dir('/home/ubuntu/ansible-ws') {
-                    sh 'ansible-playbook -i inventory.ini site.yml'
+                script {
+                    sh '''
+                    echo $DOCKER_HUB_PASS | docker login -u $DOCKER_HUB_USER --password-stdin
+                    docker push $DOCKER_HUB_USER/backend:latest
+                    docker push $DOCKER_HUB_USER/frontend:latest
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy with Ansible') {
+            steps {
+                script {
+                    sh """
+                    cd ${ANSIBLE_DIR}
+                    ansible-playbook -i inventory/hosts.ini playbooks/deploy.yml
+                    """
                 }
             }
         }
@@ -53,10 +52,10 @@ pipeline {
 
     post {
         success {
-            echo "Deployment completed successfully!"
+            echo '✅ Deployment completed successfully!'
         }
         failure {
-            echo "Deployment failed!"
+            echo '❌ Deployment failed. Check logs in Jenkins.'
         }
     }
 }
