@@ -43,7 +43,7 @@ pipeline {
                 script {
                     sh """
                     cd ${ANSIBLE_DIR}
-                    ansible-playbook -i inventory/hosts.ini playbooks/deploy.yml
+                    ansible-playbook -i inventory.ini site.yml
                     """
                 }
             }
